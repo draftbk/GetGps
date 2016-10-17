@@ -16,9 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
@@ -48,29 +49,33 @@ public class MacAdapter extends ArrayAdapter<Mac> {
 
     @Override
     public View getView( final int position,View convertView,ViewGroup parent){
-        Mac mac=getItem(position);
+        final Mac mac=getItem(position);
         View view;
         final ViewHolder viewHolder;
 //        if(convertView==null){
         Log.d("test",  "convertView"+convertView);
         view= LayoutInflater.from(getContext()).inflate(resourceId,null);
         viewHolder=new ViewHolder();
+        viewHolder.linearLayout= (LinearLayout) view.findViewById(R.id.list_item);
         viewHolder.textName=(TextView)view.findViewById(R.id.name);
         viewHolder.textAddress=(TextView)view.findViewById(R.id.address);
         view.setTag(viewHolder);
-//        }else{
-//            Log.d("test",  "convertViewelse"+convertView);
-//            view=convertView;
-//            viewHolder=(ViewHolder) view.getTag();
-//        }
         viewHolder.textName.setText(mac.getName());
         viewHolder.textAddress.setText(mac.getAddress());
+        viewHolder.linearLayout.setBackgroundColor(mac.getLevel()*3241);
+        viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "wifi信号level: "+mac.getLevel(), Toast.LENGTH_SHORT).show();
+            }
+        });
         return view;
     }
 
 
     class ViewHolder{
         TextView textName,textAddress;
+        LinearLayout linearLayout;
     }
 
 }

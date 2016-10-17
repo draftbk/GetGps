@@ -6,10 +6,20 @@ package com.example.slf.getgps;
 
 public class Mac {
     String name,address;
+    int level;
 
-    public Mac(String name, String address) {
+    public Mac(String name, String address,int level) {
         this.name = name;
         this.address = address;
+        this.level=level;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public String getName() {

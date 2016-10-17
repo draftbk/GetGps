@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private Location location;
     private ArrayList<Mac> macArrayList;
     private MacAdapter adapter;
-    private String macString="";
-    private String gpsString="";
-    private String url="http://211.87.238.29";
+    private String macString = "";
+    private String gpsString = "";
+    private String url = "http://211.87.238.29";
     private Handler han;
 
     @Override
@@ -49,33 +49,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getMac() {
-        Toast.makeText(MainActivity.this,"正在获取",Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "正在获取", Toast.LENGTH_SHORT).show();
         String wserviceName = Context.WIFI_SERVICE;
         WifiManager wm = (WifiManager) getSystemService(wserviceName);
         List<ScanResult> wifiList = wm.getScanResults();
-        String text="";
+        String text = "";
         for (int i = 0; i < wifiList.size(); i++) {
             ScanResult result = wifiList.get(i);
-            Log.d("dada", "bssid=" + result.BSSID+" ssid:"+result.SSID);
-            text=text+"wifi名："+result.SSID+"\n"+"mac地址："+result.BSSID+"\n";
-            Mac mac=new Mac("wifi名："+result.SSID,"mac地址："+result.BSSID);
+            Log.d("dada", "bssid=" + result.BSSID + " ssid:" + result.SSID);
+            text = text + "wifi名：" + result.SSID + "\n" + "mac地址：" + result.BSSID + "\n";
+            Mac mac = new Mac("wifi名：" + result.SSID, "mac地址：" + result.BSSID, result.level);
             macArrayList.add(mac);
         }
-        Log.d("test","text...."+text);
-        macString=text;
-        adapter=new MacAdapter(MainActivity.this,R.layout.mac_item,macArrayList,listMac);
+        Log.d("test", "text...." + text);
+        macString = text;
+        adapter = new MacAdapter(MainActivity.this, R.layout.mac_item, macArrayList, listMac);
         listMac.setAdapter(adapter);
     }
 
     private void getGps() {
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        //判断GPS是否可用
-        System.out.println("state=" + manager.isProviderEnabled(LocationManager.GPS_PROVIDER));
         //检查权限
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         //如果要用GPS就把下面的NETWORK_PROVIDER改成GPS_PROVIDER,但是GPS不稳定
+
         location = manager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 1, locationLinstener);
         textGps.setText("正在获取GPS定位信息。。。");
@@ -161,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Toast.makeText(MainActivity.this,"github地址:github.com/draftbk",Toast.LENGTH_SHORT).show();
             return true;
         }
 
