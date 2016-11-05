@@ -24,6 +24,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private MacAdapter adapter;
     private String macString = "";
     private String gpsString = "";
-    private String url = "http://211.87.238.29";
+    private String url = "http://121.250.223.36/submit";
     private Handler han;
 
     @Override
@@ -57,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < wifiList.size(); i++) {
             ScanResult result = wifiList.get(i);
             Log.d("dada", "bssid=" + result.BSSID + " ssid:" + result.SSID);
-            text = text + "wifi名：" + result.SSID + "\n" + "mac地址：" + result.BSSID + "\n";
+            text = text + "wifi名:" + result.SSID  + "mac地址:" + result.BSSID ;
             Mac mac = new Mac("wifi名：" + result.SSID, "mac地址：" + result.BSSID, result.level);
             macArrayList.add(mac);
         }
@@ -108,13 +112,39 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this,"正在上传信息",Toast.LENGTH_SHORT).show();
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                AutoString autoString=new AutoString("gps",gpsString);
-                autoString.addToResult("mac",macString);
-                autoString.addToResult("name","沈立凡");
-                autoString.addToResult("id","201400130024");
+                AutoString autoString=new AutoString("wifi-mac",macString);
+                autoString.addToResult("gps",gpsString);
+                autoString.addToResult("iam","shenlifan-201400130024");
                 String params=autoString.getResult();
                 NetThread netThread =new NetThread(han,url,params);
                 netThread.start();
+//                用方法二再发一遍
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String url2=url+"?wifi-mac="+macString.replace(" ", "")+"&gps="+gpsString.replace(" ", "")+"&iam="+"shenlifan-201400130024";
+                        URL mURL = null;
+                        Log.d("test",url2);
+                        try {
+                            mURL = new URL(url2);
+                            HttpURLConnection conn;
+                            conn = (HttpURLConnection) mURL.openConnection();
+                            conn.setRequestMethod("GET");
+                            conn.setReadTimeout(5000);
+                            conn.setConnectTimeout(10000);
+
+                            int responseCode = conn.getResponseCode();
+                            if (responseCode == 200) {
+
+                            } else {
+                                Log.i("test", "访问失败" + responseCode);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }).start();
 
             }
         });

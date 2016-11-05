@@ -43,7 +43,7 @@ public class NetThread extends Thread{
             connection=(HttpURLConnection)realUrl.openConnection();
             //设置通用的请求属性
 
-            connection.setRequestMethod("POST");
+            connection.setRequestMethod("GET");
             connection.setConnectTimeout(8000);
             // 设置 HttpURLConnection的字符编码
             connection.setRequestProperty("Accept-Charset", "UTF-8");
